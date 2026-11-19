@@ -2,7 +2,7 @@ MEDICONNECT
 System Overview and Pitch Brief
 
 Prepared for presentation: November 19, 2026
-
+The addition into the system
 
 1. THE SHORT VERSION
 
@@ -297,3 +297,5 @@ Development database: SQLite.
 Production database direction: PostgreSQL.
 External map features: optional Google Maps configuration.
 
+git config --global user.email "monicamunyiva986@gmail.com"
+git config --global user.name "monicamunyiva986-byte"
