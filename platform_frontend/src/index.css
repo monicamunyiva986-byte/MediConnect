@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'DM Sans', Aptos, sans-serif;
+  color: #183348;
+  background: #f2f7fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 12% -12%, rgba(20, 125, 130, 0.08), transparent 38%),
+    linear-gradient(180deg, #f8fbfd 0%, #f2f7fb 52%, #eef5f9 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(20, 125, 130, 0.32);
+  outline-offset: 2px;
+}
+
+::selection {
+  color: #12384d;
+  background: #c9ece7;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    @apply rounded-xl border-slate-200 bg-white text-ink transition-colors;
+  }
+
+  input:not([type='checkbox']):not([type='radio'])::placeholder,
+  textarea::placeholder {
+    @apply text-slate-400;
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: #147d82;
+  }
+
+  table {
+    @apply w-full border-collapse text-sm;
+  }
+
+  thead th {
+    @apply bg-slate-50 text-left font-semibold uppercase tracking-wide text-slate-500;
+    font-size: 0.7rem;
+  }
+
+  th,
+  td {
+    @apply border-b border-slate-100 px-4 py-3;
+  }
+
+  tbody tr {
+    @apply transition-colors;
+  }
+
+  tbody tr:hover {
+    background-color: #f8fbfd;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
