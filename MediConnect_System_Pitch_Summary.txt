@@ -1,0 +1,299 @@
+MEDICONNECT
+System Overview and Pitch Brief
+
+Prepared for presentation: November 19, 2026
+
+
+1. THE SHORT VERSION
+
+MediConnect is a healthcare operations platform that brings together three
+important coordination needs: finding qualified clinical staff, understanding
+hospital resource availability, and coordinating patient transport requests.
+It gives hospitals and healthcare professionals a shared digital workspace
+for staffing and operational information, with a web dashboard backed by a
+role-aware API.
+
+The central idea is simple: hospitals should not have to coordinate urgent
+staffing needs, critical resource updates, and transport requests through
+disconnected spreadsheets, calls, and messages. MediConnect creates a
+structured workflow for these tasks, so the right people can see relevant
+information, take an authorized action, and follow what happened.
+
+Suggested one-line pitch:
+"MediConnect helps hospitals coordinate people, essential resources, and
+patient transport through one operational platform."
+
+
+2. THE PROBLEM
+
+Healthcare operations depend on timely coordination, but key information is
+often spread across separate tools and communication channels:
+
+- A hospital may need a clinician for a particular shift, specialty, or level
+  of urgency, while qualified professionals may not know where the opportunity
+  is or how to respond.
+- Staffing teams need to review candidates, confirm assignments, and keep a
+  record of who is expected to work and when.
+- Hospital teams need visibility into operational resources such as beds,
+  blood stock, and oxygen supplies. Updates that are difficult to find or
+  reconcile can make coordination harder.
+- Patients and hospital dispatch teams need a clear way to submit and track a
+  transport request, including its status and dispatcher-provided ETA.
+- Manual processes can make it harder to maintain a shared, up-to-date view
+  and to understand who changed a resource count or request.
+
+MediConnect is designed to address this coordination problem. It is an
+operational coordination tool, not a replacement for clinical judgment,
+hospital information systems, emergency services, or clinical care.
+
+
+3. WHO IT SERVES
+
+- Hospitals and hospital administrators: publish staffing opportunities,
+  review bids, manage hospital teams, and monitor operational resource records.
+- Doctors, nurses, and other healthcare professionals: maintain a professional
+  profile, discover open contracts, bid for work, and track assignments.
+- Hospital dispatch coordinators: receive transport requests for their
+  destination hospital and update dispatch, location, ETA, and status.
+- Patients: submit a transport request to a selected hospital and view its
+  progress in the application.
+- Platform administrators: manage the overall service and its accounts.
+
+Access to key actions is associated with authenticated accounts and roles.
+Hospital memberships identify the hospital teams allowed to manage hospital-
+specific workflows.
+
+
+4. WHAT THE SYSTEM DOES
+
+A. Staffing marketplace
+
+Hospitals can create staffing contracts for shifts, short-term cover,
+longer-term or locum work, on-call work, and full-time positions. A contract
+can include the required professional role, specialty, experience, schedule,
+location, urgency, budget, and other requirements.
+
+The typical workflow is:
+1. A hospital administrator drafts a contract and publishes it.
+2. Eligible professionals browse open public opportunities and submit a bid
+   with a proposed rate and message.
+3. Hospital administrators review incoming bids and accept or reject them.
+4. Accepting a bid creates an assignment and closes the other pending bids for
+   that contract.
+5. The professional checks in and checks out; the assignment can then be
+   completed and reviewed.
+6. Notifications inform relevant users about bids and decisions.
+
+B. Hospital resource visibility and management
+
+The system provides a configurable resource catalog and hospital-level records
+for resources such as beds, medications, equipment, blood, and oxygen. Resource
+records can include capacity, available quantity, reserved quantity, unit,
+department, low-stock threshold, and the time and user of the latest update.
+
+Authorized hospital users can record additions, removals, reservations,
+releases, or corrections. A resource adjustment records the previous and new
+available quantities, who made the change, a reason, and an optional
+reference. Low or critical levels can trigger in-app alerts for relevant
+hospital managers.
+
+Blood records can describe blood group, component, batch, and expiry.
+Oxygen records can describe supply type, capacity, current level, number of
+units, and available units. These records support operational visibility;
+they are only as current and accurate as the data entered or connected by the
+hospital.
+
+C. Ambulance request workflow
+
+An authenticated user can request transport to a destination hospital and
+provide a pickup address and coordinates. Authorized staff associated with
+that hospital can dispatch the request, provide an ambulance identifier,
+location and ETA, then update location and progress. The request moves through
+statuses such as requested, en route, arrived, completed, or cancelled.
+Patients receive in-app status notifications.
+
+The frontend includes a hospital map and route experience. Driving-route
+estimates depend on a configured Google Maps key and enabled Maps services.
+Without that configuration, the page can provide a direct-distance estimate
+and an external map link.
+
+D. Account, notifications, and operational dashboards
+
+Users can sign in with email and password, maintain a profile, change a
+password, and (where appropriate) submit professional verification documents.
+The application includes an in-app notification inbox and user preferences.
+
+The web workspace includes screens for ICU resources, oxygen, resource
+management, audit history, analytics, reports, staffing, notifications,
+hospital maps, ambulance requests, and account settings. Analytics and reports
+summarize the current API records; the current backend does not provide
+historical time-series reporting.
+
+
+5. HOW IT WORKS
+
+1. The user accesses MediConnect through a browser-based React and TypeScript
+   frontend.
+2. The frontend calls the Django REST API over HTTP. The API is divided into
+   modules for accounts, hospitals, contracts, resources, notifications, and
+   ambulance requests.
+3. Users authenticate using JSON Web Tokens (JWT). The frontend holds tokens
+   in memory during the session and can refresh an expired access token.
+4. The backend applies authentication, role checks, and hospital-membership
+   checks to protected operations. For example, a professional can bid on a
+   contract, while a hospital administrator can publish it or review bids.
+5. Django persists users, hospitals, staff memberships, contracts, bids,
+   assignments, resource records, transactions, notifications, and ambulance
+   requests in a relational database.
+6. Backend endpoints expose paginated, structured data to the frontend. The
+   API schema is documented with OpenAPI and can be explored through Swagger
+   UI or ReDoc.
+
+At present, the development configuration uses SQLite. PostgreSQL is
+recommended for a production deployment. Resource and ambulance views show
+current records rather than receiving continuous device or vehicle telemetry.
+Ambulance location and ETA updates are entered by dispatch staff and polled
+by the frontend while tracking a request.
+
+
+6. WHAT MAKES THE APPROACH VALUABLE
+
+- One operational workspace: staffing, selected resource records, alerts, and
+  transport requests are accessible through the same product.
+- Structured workflows: contracts, bids, assignments, resource adjustments,
+  and transport statuses have defined states and permitted actions.
+- Accountability: resource adjustments retain a transaction record with the
+  user, quantities, timestamp, and reason.
+- Role-aware collaboration: users see and manage workflows relevant to their
+  role and hospital membership.
+- Configurable resource model: resource categories and types can represent
+  different hospital inventories instead of hard-coding every resource into a
+  separate interface.
+- Extensible API: a documented REST API offers a foundation for future
+  integrations with hospital systems and other approved services.
+- Clear operational focus: the system organizes coordination tasks and
+  visibility; it does not claim to make clinical decisions.
+
+
+7. CURRENT PRODUCT STATUS AND IMPORTANT LIMITS
+
+The current codebase contains a functional web application and Django REST
+backend for the workflows described above. It is best presented as a
+prototype or early-stage product pending deployment and validation with
+participating hospitals.
+
+Be precise in the pitch:
+
+- The frontend can run with sample data, but its README identifies that mode
+  as "Sample data - not live." Live hospital data appears only after connecting
+  to a configured backend and signing in.
+- Resource levels are not automatically sensed. The application stores
+  operational values supplied through its API; updates may be entered
+  manually unless an integration is later built.
+- The ambulance workflow is internal to the platform. It is not connected to
+  an ambulance provider, emergency call center, or live vehicle GPS feed.
+  Dispatchers manually provide vehicle location, ETA, and status. It must not
+  be presented as a substitute for contacting local emergency services.
+- Email, SMS, and push preferences exist in the product model, but live
+  delivery depends on configuring and implementing those external channels.
+  The current product includes in-app notifications.
+- Current reports and analytics are based on current API data, not historical
+  trends or complete system-wide audit analytics.
+- The current audit screen retrieves up to 50 transactions for a selected
+  resource, rather than a complete cross-hospital audit log.
+- The Organs category is a catalog/resource classification only. The system
+  does not verify donor or organ availability.
+- The product is not an electronic health record, clinical decision-support
+  system, or validated emergency dispatch service.
+- Production readiness requires deployment configuration, security review,
+  reliable hosting and backups, operational monitoring, data governance, and
+  validation against applicable healthcare privacy and regulatory
+  requirements.
+
+These are appropriate next steps for a pilot and product roadmap, not claims
+that the current prototype already provides those integrations or assurances.
+
+
+8. A PRACTICAL PILOT PLAN
+
+1. Select one or two hospital partners and agree on a narrow initial scope.
+2. Validate staff roles, resource categories, update responsibilities, and
+   access policies with hospital operations teams.
+3. Configure a production-grade environment, database, secrets management,
+   backups, monitoring, HTTPS, and appropriate security controls.
+4. Begin with a limited workflow, such as staffing contracts and resource
+   status updates for a defined group of units.
+5. Train designated staff and document how often operational values should be
+   updated and who is accountable for them.
+6. Measure operational indicators agreed with pilot partners, such as time to
+   publish and fill a shift, time to update resource records, alert response
+   time, and user adoption. Establish baselines before making impact claims.
+7. Add integrations only after confirming technical access, data quality,
+   privacy requirements, and operational ownership.
+
+
+9. SUGGESTED LIVE DEMONSTRATION
+
+Keep the demo transparent and focused:
+
+1. Show the sign-in/connect experience and say whether you are using sample
+   data or a live configured backend.
+2. Open the staffing marketplace. Show a contract, a professional bid, and
+   how a hospital administrator reviews it.
+3. Show a resource record and demonstrate an authorized stock adjustment.
+   Point out the transaction history and low-stock alert behavior.
+4. Show the ambulance request flow using a clearly identified demonstration
+   request. Explain that dispatch updates are manually entered in this version.
+5. End with the reports/analytics screens and state that they summarize current
+   data, not historical performance.
+
+Do not display demo figures as if they were live hospital measurements, and do
+not use real patient information in a public presentation.
+
+
+10. PITCH SCRIPT (ABOUT ONE MINUTE)
+
+"Hospitals coordinate care through a network of people and essential
+resources, but staffing, resource updates, and transport coordination can be
+split across disconnected processes. MediConnect brings these operational
+workflows together in one web platform.
+
+"Hospitals can publish staffing needs and review bids from qualified
+professionals. Teams can maintain visibility into resources such as beds,
+blood, and oxygen, record changes with an audit trail, and receive in-app
+low-stock alerts. Patients can submit transport requests, while authorized
+hospital dispatch staff update request status and ETA.
+
+"The platform is built with a role-aware Django API and a React dashboard. Our
+current version demonstrates these workflows; live data, device telemetry,
+ambulance-provider connections, and production compliance work are not
+assumed. We are looking for hospital partners to validate a focused pilot,
+measure operational value, and guide the integrations needed for deployment."
+
+
+11. THE ASK
+
+Invite the audience to help define the next validation step:
+
+- A pilot partner to test a clearly scoped staffing or resource workflow.
+- Operational feedback from hospital administrators, staffing coordinators,
+  clinicians, and dispatch teams.
+- Guidance on integration requirements, data governance, privacy, and
+  deployment standards.
+- Agreement on measurable pilot outcomes and the baseline needed to evaluate
+  them.
+
+The goal is to move from a working prototype to a trusted, validated
+operational platform through real-world collaboration.
+
+
+TECHNICAL REFERENCE
+
+Frontend: React 18, TypeScript, Vite.
+Backend: Django and Django REST Framework.
+Authentication: JWT-based sign-in and refresh.
+API documentation: OpenAPI, Swagger UI, and ReDoc.
+Development database: SQLite.
+Production database direction: PostgreSQL.
+External map features: optional Google Maps configuration.
+
